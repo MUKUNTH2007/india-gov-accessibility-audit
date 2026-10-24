@@ -1,0 +1,27 @@
+# Node dependencies and build output
+node_modules/
+client/node_modules/
+client/dist/
+
+# Python virtual environments and caches
+.venv/
+venv/
+server/.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Local environment secrets
+.env
+.env.*
+.env.example
+
+# Operating system files
+.DS_Store
+
+# Editor files
+.vscode/
+.idea/
+
+# Generated TypeScript build information
+*.tsbuildinfo
