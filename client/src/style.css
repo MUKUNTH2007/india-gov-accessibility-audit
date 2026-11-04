@@ -1177,3 +1177,84 @@ form button[type="submit"]:focus-visible {
     animation: none;
   }
 }
+/* API loading skeletons */
+
+.skeleton {
+  display: block;
+  height: 14px;
+  background: #dbe3ea;
+  border-radius: 6px;
+  animation: skeleton-pulse 1.4s ease-in-out infinite;
+}
+
+.skeleton-id {
+  width: 35px;
+}
+
+.skeleton-title {
+  width: 75%;
+}
+
+.skeleton-description {
+  width: 90%;
+}
+
+@keyframes skeleton-pulse {
+  0%,
+  100% {
+    opacity: 0.5;
+  }
+
+  50% {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skeleton {
+    animation: none;
+  }
+}
+/* API error banner */
+
+.error-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px;
+  margin: 16px 0;
+  background: #fff1f0;
+  border: 1px solid #e5a09a;
+  border-radius: 8px;
+  color: #9b2c2c;
+}
+
+.error-banner p {
+  margin: 0;
+}
+
+.error-banner button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  background: #9b2c2c;
+  color: white;
+  cursor: pointer;
+}
+
+.error-banner button:hover {
+  background: #7f1d1d;
+}
+
+.error-banner button:focus-visible {
+  outline: 3px solid #1d4ed8;
+  outline-offset: 3px;
+}
+
+@media (max-width: 600px) {
+  .error-banner {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
