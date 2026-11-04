@@ -1,27 +1,183 @@
 
-/* Accessible navigation header */
+/* ==========================================
+   INDIA GOV ACCESSIBILITY DASHBOARD
+   Complete Responsive Design System
+========================================== */
+
+
+/* ==========================================
+   1. DESIGN TOKENS
+========================================== */
+
+:root {
+  /* Brand colors */
+  --color-primary: #075985;
+  --color-primary-dark: #064568;
+  --color-primary-light: #e0f2fe;
+
+  /* Background colors */
+  --color-background: #f1f5f9;
+  --color-surface: #ffffff;
+  --color-surface-alt: #f3f6f9;
+
+  /* Text colors */
+  --color-text: #172b3a;
+  --color-text-muted: #526575;
+
+  /* Borders */
+  --color-border: #d6e0e8;
+
+  /* Status colors */
+  --color-success: #166534;
+  --color-warning: #92400e;
+  --color-danger: #b91c1c;
+
+  /* Typography */
+  --font-family: Inter, system-ui, -apple-system, sans-serif;
+  --font-size-sm: 0.875rem;
+  --font-size-base: 1rem;
+  --font-size-lg: 1.2rem;
+  --font-size-xl: 1.4rem;
+  --font-size-2xl: 1.8rem;
+
+  /* Spacing */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+
+  /* Border radius */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-full: 999px;
+
+  /* Shadows */
+  --shadow-sm: 0 2px 6px rgb(15 23 42 / 5%);
+  --shadow-md: 0 6px 20px rgb(15 23 42 / 8%);
+  --shadow-lg: 0 12px 32px rgb(15 23 42 / 12%);
+
+  /* Transitions */
+  --transition-fast: 180ms ease;
+}
+
+
+/* ==========================================
+   2. DARK THEME VARIABLES
+========================================== */
+
+[data-theme="dark"] {
+  --color-background: #0f172a;
+  --color-surface: #1e293b;
+  --color-surface-alt: #263449;
+
+  --color-text: #f1f5f9;
+  --color-text-muted: #cbd5e1;
+
+  --color-border: #475569;
+
+  --color-primary: #38bdf8;
+  --color-primary-dark: #0284c7;
+  --color-primary-light: #164e63;
+
+  --color-success: #86efac;
+  --color-warning: #fcd34d;
+  --color-danger: #fca5a5;
+}
+
+
+/* ==========================================
+   3. GLOBAL STYLES
+========================================== */
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  min-width: 320px;
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  font-family: var(--font-family);
+  font-size: var(--font-size-base);
+  line-height: 1.6;
+  color: var(--color-text);
+  background: var(--color-background);
+
+  transition:
+    background-color var(--transition-fast),
+    color var(--transition-fast);
+}
+
+h1,
+h2,
+h3 {
+  color: var(--color-text);
+  line-height: 1.3;
+}
+
+p {
+  color: var(--color-text-muted);
+}
+
+a {
+  transition:
+    background-color var(--transition-fast),
+    color var(--transition-fast);
+}
+
+button,
+input,
+textarea {
+  font-family: inherit;
+}
+
+
+/* ==========================================
+   4. ACCESSIBLE NAVIGATION HEADER
+========================================== */
 
 .site-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
-  gap: 20px;
-  padding: 20px 5%;
-  background: #ffffff;
-  border-bottom: 1px solid #d6e0e8;
+  gap: var(--space-5);
+  padding: var(--space-5) 5%;
+
+  background: color-mix(
+    in srgb,
+    var(--color-surface) 88%,
+    transparent
+  );
+
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+
+  border-bottom: 1px solid var(--color-border);
+  box-shadow: var(--shadow-sm);
+
+  transition: background-color var(--transition-fast);
 }
 
 .site-brand h1 {
   margin: 0;
-  font-size: 1.4rem;
+  font-size: var(--font-size-xl);
 }
 
 .nav-list,
 .sidebar-list {
   display: flex;
   flex-wrap: wrap;
-  gap: 12px;
+  gap: var(--space-3);
   padding: 0;
   margin: 0;
   list-style: none;
@@ -31,82 +187,127 @@
 .sidebar-list a {
   display: inline-block;
   padding: 10px 14px;
-  color: #075985;
+
+  color: var(--color-primary);
   font-weight: 650;
   text-decoration: none;
-  border-radius: 6px;
+
+  border-radius: var(--radius-sm);
+
+  transition:
+    background-color var(--transition-fast),
+    color var(--transition-fast),
+    transform var(--transition-fast);
 }
 
 .nav-list a:hover,
 .sidebar-list a:hover {
-  background: #e0f2fe;
+  background: var(--color-primary-light);
   text-decoration: underline;
+  transform: translateY(-2px);
 }
 
 .nav-list a.active,
 .sidebar-list a.active {
-  background: #075985;
+  background: var(--color-primary);
   color: #ffffff;
 }
 
-/* Skip navigation link */
+
+/* ==========================================
+   5. SKIP NAVIGATION LINK
+========================================== */
 
 .skip-link {
   position: absolute;
   top: -100px;
   left: 10px;
   z-index: 1000;
+
   padding: 12px;
-  background: #ffffff;
-  color: #075985;
+
+  background: var(--color-surface);
+  color: var(--color-primary);
+
+  border: 2px solid var(--color-primary);
+  border-radius: var(--radius-sm);
 }
 
 .skip-link:focus {
   top: 10px;
 }
 
-/* Main application layout */
+
+/* ==========================================
+   6. RESPONSIVE DASHBOARD LAYOUT
+========================================== */
 
 .app-layout {
   display: grid;
-  grid-template-columns: 240px minmax(0, 1fr);
-  gap: 24px;
-  width: min(100% - 32px, 1200px);
-  margin: 30px auto;
+
+  grid-template-columns:
+    minmax(200px, 240px)
+    minmax(0, 1fr);
+
+  gap: var(--space-6);
+
+  width: min(100% - 40px, 1440px);
+  margin: var(--space-8) auto;
+
   align-items: start;
+  min-width: 0;
 }
 
+
+/* Sidebar */
+
 .sidebar {
-  padding: 22px;
-  background: #ffffff;
-  border: 1px solid #d6e0e8;
-  border-radius: 12px;
+  min-width: 0;
+  padding: var(--space-6);
+
+  background: var(--color-surface);
+
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+
+  box-shadow: var(--shadow-sm);
 }
 
 .sidebar h2 {
   margin-top: 0;
-  font-size: 1.2rem;
+  font-size: var(--font-size-lg);
 }
 
 .sidebar-list {
   flex-direction: column;
-  gap: 8px;
+  gap: var(--space-2);
 }
+
+
+/* Main content */
 
 .main-content {
   min-width: 0;
-  padding: 24px;
-  background: #ffffff;
-  border: 1px solid #d6e0e8;
-  border-radius: 12px;
+  padding: var(--space-6);
+
+  background: var(--color-surface);
+
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+
+  box-shadow: var(--shadow-sm);
 }
 
-/* Accessible data table */
+
+/* ==========================================
+   7. ACCESSIBLE DATA TABLE
+========================================== */
 
 .table-container {
   width: 100%;
   overflow-x: auto;
-  margin-top: 24px;
+  margin-top: var(--space-6);
+  -webkit-overflow-scrolling: touch;
 }
 
 table {
@@ -116,7 +317,7 @@ table {
 }
 
 caption {
-  padding: 12px;
+  padding: var(--space-3);
   font-weight: 700;
   text-align: left;
 }
@@ -124,31 +325,34 @@ caption {
 th,
 td {
   padding: 14px;
-  border: 1px solid #d6e0e8;
+  border: 1px solid var(--color-border);
 }
 
 th {
-  background: #eaf2f8;
-  color: #172b3a;
+  background: var(--color-surface-alt);
+  color: var(--color-text);
 }
 
 tbody tr:nth-child(even) {
-  background: #f3f6f9;
+  background: var(--color-surface-alt);
 }
 
-/* Accessible feedback form */
+
+/* ==========================================
+   8. ACCESSIBLE FEEDBACK FORM
+========================================== */
 
 form {
   display: grid;
-  gap: 20px;
+  gap: var(--space-5);
   max-width: 650px;
-  margin-top: 24px;
+  margin-top: var(--space-6);
 }
 
 .form-group {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: var(--space-2);
 }
 
 .form-group label {
@@ -158,9 +362,14 @@ form {
 input:not([type="radio"]),
 textarea {
   width: 100%;
-  padding: 12px;
-  border: 1px solid #526575;
-  border-radius: 6px;
+  padding: var(--space-3);
+
+  color: var(--color-text);
+  background: var(--color-surface);
+
+  border: 1px solid var(--color-text-muted);
+  border-radius: var(--radius-sm);
+
   font: inherit;
 }
 
@@ -173,8 +382,9 @@ fieldset {
   display: grid;
   gap: 14px;
   padding: 18px;
-  border: 1px solid #526575;
-  border-radius: 8px;
+
+  border: 1px solid var(--color-text-muted);
+  border-radius: var(--radius-md);
 }
 
 fieldset .form-group {
@@ -187,63 +397,89 @@ fieldset legend {
   font-weight: 700;
 }
 
+
+/* ==========================================
+   9. BUTTON STYLING
+========================================== */
+
 button {
   width: fit-content;
   padding: 12px 22px;
+
   border: none;
-  border-radius: 6px;
-  background: #075985;
+  border-radius: var(--radius-sm);
+
+  background: var(--color-primary);
   color: #ffffff;
+
   font: inherit;
   font-weight: 700;
+
   cursor: pointer;
+
+  box-shadow: var(--shadow-sm);
+
+  transition:
+    background-color var(--transition-fast),
+    box-shadow var(--transition-fast),
+    transform var(--transition-fast);
 }
 
 button:hover {
-  background: #064568;
+  background: var(--color-primary-dark);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
 }
+
+
+/* ==========================================
+   10. KEYBOARD ACCESSIBILITY
+========================================== */
 
 input:focus-visible,
 textarea:focus-visible,
 button:focus-visible,
 a:focus-visible {
-  outline: 3px solid #92400e;
+  outline: 3px solid var(--color-warning);
   outline-offset: 3px;
 }
 
-/* Footer */
 
-.page-footer {
-  padding: 20px;
-  text-align: center;
+/* ==========================================
+   11. MODERN INTERACTION EFFECTS
+========================================== */
+
+.sidebar,
+.main-content {
+  transition:
+    box-shadow var(--transition-fast),
+    border-color var(--transition-fast),
+    background-color var(--transition-fast);
 }
 
-/* Responsive layout */
-
-@media (max-width: 760px) {
-  .app-layout {
-    grid-template-columns: 1fr;
-  }
-
-  .site-header {
-    align-items: flex-start;
-    flex-direction: column;
-  }
-
-  .nav-list {
-    gap: 5px;
-  }
-
-  .main-content {
-    padding: 16px;
-  }
+.sidebar:hover,
+.main-content:hover {
+  box-shadow: var(--shadow-md);
 }
+
+
+/* ==========================================
+   12. ACCESSIBLE MODAL
+========================================== */
+
 .audit-dialog {
   width: min(90%, 550px);
+  max-width: calc(100% - 24px);
+
   padding: 28px;
-  border: 1px solid #d6e0e8;
-  border-radius: 12px;
-  color: #172b3a;
+
+  background: var(--color-surface);
+  color: var(--color-text);
+
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+
+  box-shadow: var(--shadow-lg);
 }
 
 .audit-dialog::backdrop {
@@ -252,8 +488,692 @@ a:focus-visible {
 
 .audit-dialog h2 {
   margin-top: 0;
+  color: var(--color-text);
 }
 
 .audit-dialog p {
   line-height: 1.7;
+}
+
+
+/* ==========================================
+   13. FOOTER
+========================================== */
+
+.page-footer {
+  padding: var(--space-5);
+  text-align: center;
+  color: var(--color-text-muted);
+}
+
+
+/* ==========================================
+   14. RESPONSIVE BREAKPOINTS
+========================================== */
+
+
+/* Mobile: 320px - 767px */
+
+@media (max-width: 767px) {
+
+  .app-layout {
+    grid-template-columns: minmax(0, 1fr);
+    width: calc(100% - 24px);
+    gap: var(--space-4);
+    margin: var(--space-5) auto;
+  }
+
+  .site-header {
+    align-items: flex-start;
+    flex-direction: column;
+    padding: var(--space-4);
+  }
+
+  .nav-list {
+    gap: 5px;
+  }
+
+  .sidebar {
+    padding: var(--space-4);
+  }
+
+  .sidebar-list {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .main-content {
+    padding: var(--space-4);
+  }
+
+  .table-container {
+    max-width: 100%;
+  }
+}
+
+
+/* Tablet: 768px - 1023px */
+
+@media (min-width: 768px) and (max-width: 1023px) {
+
+  .app-layout {
+    grid-template-columns: 190px minmax(0, 1fr);
+    width: calc(100% - 32px);
+    gap: var(--space-4);
+  }
+
+  .sidebar,
+  .main-content {
+    padding: var(--space-4);
+  }
+}
+
+
+/* Laptop: 1024px - 1439px */
+
+@media (min-width: 1024px) and (max-width: 1439px) {
+
+  .app-layout {
+    grid-template-columns: 220px minmax(0, 1fr);
+    width: calc(100% - 48px);
+  }
+}
+
+
+/* Large desktop: 1440px and above */
+
+@media (min-width: 1440px) {
+
+  .app-layout {
+    grid-template-columns: 250px minmax(0, 1fr);
+    width: min(100% - 64px, 1440px);
+  }
+}
+
+
+/* ==========================================
+   15. REDUCED MOTION ACCESSIBILITY
+========================================== */
+
+@media (prefers-reduced-motion: reduce) {
+
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
+
+
+/* ==========================================
+   16. HORIZONTAL OVERFLOW PROTECTION
+========================================== */
+
+img,
+video,
+iframe {
+  max-width: 100%;
+}
+
+.app-layout > *,
+.main-content > * {
+  min-width: 0;
+}
+
+/* Theme toggle button */
+
+.theme-toggle {
+  flex-shrink: 0;
+  padding: 10px 16px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-full);
+  background: var(--color-surface);
+  color: var(--color-text);
+  box-shadow: var(--shadow-sm);
+}
+
+.theme-toggle:hover {
+  background: var(--color-primary-light);
+  color: var(--color-text);
+}
+
+.theme-toggle:focus-visible {
+  outline: 3px solid var(--color-warning);
+  outline-offset: 3px;
+}
+
+/* ==========================================
+   17. DASHBOARD COMPONENT STYLES
+========================================== */
+
+/* Overview cards */
+
+.overview-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-6);
+  margin-bottom: var(--space-8);
+}
+
+.panel {
+  min-width: 0;
+  padding: var(--space-6);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  transition:
+    background-color var(--transition-fast),
+    border-color var(--transition-fast),
+    box-shadow var(--transition-fast);
+}
+
+.panel h2 {
+  margin-top: 0;
+  font-size: var(--font-size-lg);
+}
+
+.panel-label {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+}
+
+.score {
+  margin: var(--space-3) 0;
+  color: var(--color-primary);
+  font-size: 3rem;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.score span {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-lg);
+}
+
+.connection {
+  color: var(--color-success);
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.muted {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+}
+
+.eyebrow {
+  color: var(--color-primary);
+  font-size: var(--font-size-sm);
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+
+.content-section {
+  min-width: 0;
+  margin-bottom: var(--space-8);
+  padding: var(--space-6);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+.keyboard-panel ul {
+  padding-left: var(--space-6);
+}
+
+.keyboard-panel li {
+  margin-bottom: var(--space-2);
+  color: var(--color-text);
+}
+
+/* Dashboard responsive layout */
+
+@media (max-width: 767px) {
+  .overview-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-4);
+  }
+
+  .panel,
+  .content-section {
+    padding: var(--space-4);
+  }
+
+  .score {
+    font-size: 2.5rem;
+  }
+}
+
+/* ==========================================
+   18. ACCESSIBILITY FINDINGS
+========================================== */
+
+.finding-list {
+  display: grid;
+  gap: var(--space-4);
+  padding: 0;
+  margin: var(--space-6) 0;
+  list-style: none;
+}
+
+.finding-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+
+  min-width: 0;
+  padding: var(--space-5);
+
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+
+  box-shadow: var(--shadow-sm);
+
+  transition:
+    transform var(--transition-fast),
+    box-shadow var(--transition-fast),
+    background-color var(--transition-fast);
+}
+
+.finding-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.finding-card h3 {
+  margin: 0 0 var(--space-2);
+  font-size: var(--font-size-lg);
+}
+
+.finding-card p {
+  margin: 0;
+  color: var(--color-text-muted);
+  overflow-wrap: anywhere;
+}
+
+/* Priority indicators */
+
+.priority {
+  flex-shrink: 0;
+  padding: 6px 12px;
+
+  border-radius: var(--radius-full);
+
+  font-size: var(--font-size-sm);
+  font-weight: 700;
+}
+
+.priority-high {
+  color: var(--color-danger);
+  background: color-mix(in srgb, var(--color-danger) 12%, var(--color-surface));
+  border: 1px solid var(--color-danger);
+}
+
+.priority-medium {
+  color: var(--color-warning);
+  background: color-mix(in srgb, var(--color-warning) 12%, var(--color-surface));
+  border: 1px solid var(--color-warning);
+}
+
+/* Mobile findings layout */
+
+@media (max-width: 767px) {
+  .finding-card {
+    align-items: flex-start;
+    flex-direction: column;
+    padding: var(--space-4);
+  }
+
+  .priority {
+    align-self: flex-start;
+  }
+}
+/* 19. ACCESSIBILITY DATA TABLE */
+
+.table-container {
+  width: 100%;
+  max-width: 100%;
+  margin-top: var(--space-6);
+  overflow-x: auto;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  -webkit-overflow-scrolling: touch;
+}
+
+.table-container table {
+  width: 100%;
+  min-width: 600px;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.table-container caption {
+  padding: var(--space-4);
+  color: var(--color-text-muted);
+  text-align: left;
+  font-size: var(--font-size-sm);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.table-container th,
+.table-container td {
+  padding: var(--space-4);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.table-container th {
+  background: var(--color-background);
+  color: var(--color-text);
+  font-size: var(--font-size-sm);
+  font-weight: 700;
+}
+
+.table-container td {
+  color: var(--color-text);
+  font-size: var(--font-size-sm);
+}
+
+.table-container tbody tr {
+  transition: background-color var(--transition-fast);
+}
+
+.table-container tbody tr:hover {
+  background: var(--color-primary-light);
+}
+
+.table-container tbody tr:last-child td {
+  border-bottom: none;
+}
+
+@media (max-width: 767px) {
+  .table-container {
+    border-radius: var(--radius-md);
+  }
+
+  .table-container th,
+  .table-container td {
+    padding: var(--space-3);
+  }
+}
+/* 20. FEEDBACK FORM */
+
+form {
+  width: 100%;
+  max-width: 720px;
+  margin-top: var(--space-6);
+  padding: var(--space-6);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin-bottom: var(--space-5);
+}
+
+.form-group label,
+fieldset legend {
+  color: var(--color-text);
+  font-weight: 600;
+  font-size: var(--font-size-sm);
+}
+
+.form-group input:not([type="radio"]),
+.form-group textarea {
+  width: 100%;
+  padding: 12px 14px;
+  color: var(--color-text);
+  background: var(--color-background);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font: inherit;
+  transition: border-color var(--transition-fast),
+    box-shadow var(--transition-fast);
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+  color: var(--color-text-muted);
+  opacity: 0.8;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px var(--color-primary-light);
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 120px;
+}
+
+fieldset {
+  margin: 0 0 var(--space-5);
+  padding: var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+fieldset legend {
+  padding: 0 var(--space-2);
+}
+
+fieldset .form-group {
+  flex-direction: row;
+  align-items: center;
+  gap: var(--space-3);
+  margin-bottom: var(--space-3);
+}
+
+fieldset .form-group:last-child {
+  margin-bottom: 0;
+}
+
+fieldset input[type="radio"] {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--color-primary);
+}
+
+form button[type="submit"] {
+  width: 100%;
+  min-height: 46px;
+  padding: 12px 20px;
+  color: white;
+  background: var(--color-primary);
+  border: none;
+  border-radius: var(--radius-md);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color var(--transition-fast),
+    transform var(--transition-fast);
+}
+
+form button[type="submit"]:hover {
+  background: var(--color-primary-dark);
+  transform: translateY(-2px);
+}
+
+form button[type="submit"]:focus-visible {
+  outline: 3px solid var(--color-primary);
+  outline-offset: 3px;
+}
+
+@media (max-width: 767px) {
+  form {
+    padding: var(--space-4);
+  }
+}
+/* 21. SIDEBAR NAVIGATION */
+
+.sidebar {
+  min-width: 0;
+  padding: var(--space-5);
+  background: var(--color-surface);
+  border-right: 1px solid var(--color-border);
+}
+
+.sidebar h2 {
+  margin: 0 0 var(--space-5);
+  color: var(--color-text);
+  font-size: var(--font-size-lg);
+}
+
+.sidebar-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.sidebar-list a {
+  display: block;
+  padding: 12px 14px;
+  color: var(--color-text-muted);
+  text-decoration: none;
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  border-radius: var(--radius-md);
+  transition:
+    color var(--transition-fast),
+    background-color var(--transition-fast),
+    transform var(--transition-fast);
+}
+
+.sidebar-list a:hover {
+  color: var(--color-primary);
+  background: var(--color-primary-light);
+  transform: translateX(3px);
+}
+
+.sidebar-list a.active {
+  color: var(--color-primary);
+  background: var(--color-primary-light);
+  box-shadow: inset 3px 0 0 var(--color-primary);
+}
+
+.sidebar-list a:focus-visible {
+  outline: 3px solid var(--color-primary);
+  outline-offset: 3px;
+}
+
+@media (max-width: 767px) {
+  .sidebar {
+    padding: var(--space-4);
+    border-right: none;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .sidebar h2 {
+    margin-bottom: var(--space-3);
+  }
+
+  .sidebar-list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .sidebar-list a {
+    padding: 12px 10px;
+    text-align: center;
+  }
+}
+/* 22. ACCESSIBILITY AUDIT MODAL */
+
+.audit-dialog {
+  width: min(90%, 560px);
+  max-width: 560px;
+  padding: var(--space-6);
+  color: var(--color-text);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-lg);
+}
+
+.audit-dialog::backdrop {
+  background: rgb(15 23 42 / 65%);
+  backdrop-filter: blur(4px);
+}
+
+.audit-dialog h2 {
+  margin-top: 0;
+  margin-bottom: var(--space-4);
+  color: var(--color-text);
+  font-size: var(--font-size-xl);
+}
+
+.audit-dialog p {
+  color: var(--color-text-muted);
+  line-height: 1.7;
+}
+
+.audit-dialog button {
+  margin-top: var(--space-4);
+  padding: 11px 20px;
+  color: white;
+  background: var(--color-primary);
+  border: none;
+  border-radius: var(--radius-md);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color var(--transition-fast);
+}
+
+.audit-dialog button:hover {
+  background: var(--color-primary-dark);
+}
+
+.audit-dialog button:focus-visible {
+  outline: 3px solid var(--color-primary);
+  outline-offset: 3px;
+}
+
+.audit-dialog[open] {
+  animation: dialog-appear 180ms ease-out;
+}
+
+@keyframes dialog-appear {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 767px) {
+  .audit-dialog {
+    padding: var(--space-4);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .audit-dialog[open] {
+    animation: none;
+  }
 }
