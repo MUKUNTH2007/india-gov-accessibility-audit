@@ -1,8 +1,11 @@
-
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { useAuth } from "../context/AuthContext";
 
 export default function Header() {
+  const { logout } = useAuth();
+  const navigate = useNavigate();
+
   const [theme, setTheme] = useState(() => {
     return localStorage.getItem("dashboard-theme") || "light";
   });
@@ -18,6 +21,11 @@ export default function Header() {
     );
   };
 
+  const handleLogout = () => {
+    logout();
+    navigate("/login", { replace: true });
+  };
+
   return (
     <>
       <a className="skip-link" href="#main-content">
@@ -31,21 +39,10 @@ export default function Header() {
 
         <nav aria-label="Main navigation">
           <ul className="nav-list">
-            <li>
-              <NavLink to="/">Dashboard</NavLink>
-            </li>
-
-            <li>
-              <NavLink to="/findings">Findings</NavLink>
-            </li>
-
-            <li>
-              <NavLink to="/data-table">Data Table</NavLink>
-            </li>
-
-            <li>
-              <NavLink to="/feedback">Feedback</NavLink>
-            </li>
+            <li><NavLink to="/">Dashboard</NavLink></li>
+            <li><NavLink to="/findings">Findings</NavLink></li>
+            <li><NavLink to="/data-table">Data Table</NavLink></li>
+            <li><NavLink to="/feedback">Feedback</NavLink></li>
           </ul>
         </nav>
 
@@ -56,6 +53,14 @@ export default function Header() {
           aria-label={`Switch to ${theme === "light" ? "dark" : "light"} theme`}
         >
           {theme === "light" ? "🌙 Dark Mode" : "☀️ Light Mode"}
+        </button>
+
+        <button
+          type="button"
+          className="logout-button"
+          onClick={handleLogout}
+        >
+          Logout
         </button>
       </header>
     </>

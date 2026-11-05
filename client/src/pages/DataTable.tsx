@@ -1,38 +1,12 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, type FormEvent } from "react";
+
 import { fetchPosts, type ApiPost } from "../services/api";
 
-const auditData = [
-  {
-    id: 1,
-    issue: "Page structure and landmarks",
-    priority: "High",
-    status: "Needs review",
-  },
-  {
-    id: 2,
-    issue: "ARIA roles and hidden content",
-    priority: "High",
-    status: "Needs review",
-  },
-  {
-    id: 3,
-    issue: "Colour contrast",
-    priority: "High",
-    status: "Needs review",
-  },
-  {
-    id: 4,
-    issue: "Touch target size",
-    priority: "Medium",
-    status: "Needs review",
-  },
-  {
-    id: 5,
-    issue: "Links and list semantics",
-    priority: "Medium",
-    status: "Needs review",
-  },
-];
+import {
+  getAuditRecords,
+  saveAuditRecords,
+  type AuditRecord,
+} from "../services/auditCatalog";
 
 function getSavedPreference(key: string, fallback: string): string {
   try {
@@ -46,8 +20,24 @@ export default function DataTable() {
   const [posts, setPosts] = useState<ApiPost[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-
   const [searchTerm, setSearchTerm] = useState("");
+
+  const [records, setRecords] = useState<AuditRecord[]>(() =>
+    getAuditRecords()
+  );
+
+  const [newIssue, setNewIssue] = useState("");
+  const [newPriority, setNewPriority] =
+    useState<AuditRecord["priority"]>("Medium");
+  const [newStatus, setNewStatus] =
+    useState<AuditRecord["status"]>("Needs review");
+
+  const [editingId, setEditingId] = useState<number | null>(null);
+  const [editIssue, setEditIssue] = useState("");
+  const [editPriority, setEditPriority] =
+    useState<AuditRecord["priority"]>("Medium");
+  const [editStatus, setEditStatus] =
+    useState<AuditRecord["status"]>("Needs review");
 
   const [selectedCategory, setSelectedCategory] = useState(() =>
     getSavedPreference("audit-category", "All")
@@ -61,9 +51,7 @@ export default function DataTable() {
     try {
       setLoading(true);
       setError("");
-
       const data = await fetchPosts();
-
       setPosts(data);
     } catch {
       setError("Unable to load data. Please try again.");
@@ -76,7 +64,6 @@ export default function DataTable() {
     loadPosts();
   }, []);
 
-  // Save category preference
   useEffect(() => {
     try {
       localStorage.setItem("audit-category", selectedCategory);
@@ -85,7 +72,6 @@ export default function DataTable() {
     }
   }, [selectedCategory]);
 
-  // Save sorting preference
   useEffect(() => {
     try {
       localStorage.setItem("audit-sort", sortOrder);
@@ -94,7 +80,89 @@ export default function DataTable() {
     }
   }, [sortOrder]);
 
-  // Search and category filtering
+  function handleAddFinding(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    const issue = newIssue.trim();
+
+    if (!issue) return;
+
+    const newRecord: AuditRecord = {
+      id: records.length
+        ? Math.max(...records.map((record) => record.id)) + 1
+        : 1,
+      issue,
+      priority: newPriority,
+      status: newStatus,
+    };
+
+    const updatedRecords = [...records, newRecord];
+
+    setRecords(updatedRecords);
+    saveAuditRecords(updatedRecords);
+
+    setNewIssue("");
+    setNewPriority("Medium");
+    setNewStatus("Needs review");
+  }
+
+  function startEditing(record: AuditRecord) {
+    setEditingId(record.id);
+    setEditIssue(record.issue);
+    setEditPriority(record.priority);
+    setEditStatus(record.status);
+  }
+
+  function cancelEditing() {
+    setEditingId(null);
+    setEditIssue("");
+  }
+  function handleDeleteFinding(id: number) {
+  const confirmed = window.confirm(
+    "Are you sure you want to delete this audit finding?"
+  );
+
+  if (!confirmed) return;
+
+  const updatedRecords = records.filter(
+    (record) => record.id !== id
+  );
+
+  setRecords(updatedRecords);
+  saveAuditRecords(updatedRecords);
+
+  if (editingId === id) {
+    cancelEditing();
+  }
+}
+
+  function handleUpdateFinding(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    const issue = editIssue.trim();
+
+    if (!issue || editingId === null) return;
+
+    const updatedRecords = records.map((record) =>
+      record.id === editingId
+        ? {
+            ...record,
+            issue,
+            priority: editPriority,
+            status: editStatus,
+          }
+        : record
+    );
+
+    setRecords(updatedRecords);
+    saveAuditRecords(updatedRecords);
+    cancelEditing();
+  }
+
+  const filteredRecords = records.filter((record) =>
+    record.issue.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   const filteredPosts = posts.filter((post) => {
     const matchesSearch = post.title
       .toLowerCase()
@@ -109,18 +177,14 @@ export default function DataTable() {
     return matchesSearch && matchesCategory;
   });
 
-  // Sorting
   const sortedPosts = [...filteredPosts].sort((a, b) => {
     switch (sortOrder) {
       case "id-desc":
         return b.id - a.id;
-
       case "title-asc":
         return a.title.localeCompare(b.title);
-
       case "title-desc":
         return b.title.localeCompare(a.title);
-
       default:
         return a.id - b.id;
     }
@@ -136,34 +200,173 @@ export default function DataTable() {
         A structured overview of the identified accessibility issues.
       </p>
 
-      <h3>Original Audit Findings</h3>
+      <h3>Manage Audit Findings</h3>
+
+      <form onSubmit={handleAddFinding}>
+        <div className="form-group">
+          <label htmlFor="new-issue">Accessibility Issue</label>
+          <input
+            id="new-issue"
+            type="text"
+            value={newIssue}
+            onChange={(event) => setNewIssue(event.target.value)}
+            placeholder="Enter a new accessibility issue"
+            required
+          />
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="new-priority">Priority</label>
+          <select
+            id="new-priority"
+            value={newPriority}
+            onChange={(event) =>
+              setNewPriority(
+                event.target.value as AuditRecord["priority"]
+              )
+            }
+          >
+            <option value="High">High</option>
+            <option value="Medium">Medium</option>
+            <option value="Low">Low</option>
+          </select>
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="new-status">Status</label>
+          <select
+            id="new-status"
+            value={newStatus}
+            onChange={(event) =>
+              setNewStatus(
+                event.target.value as AuditRecord["status"]
+              )
+            }
+          >
+            <option value="Needs review">Needs review</option>
+            <option value="In progress">In progress</option>
+            <option value="Resolved">Resolved</option>
+          </select>
+        </div>
+
+        <button type="submit">Add Finding</button>
+      </form>
+
+      <h3>Audit Findings Catalog</h3>
+
+      {editingId !== null && (
+        <form onSubmit={handleUpdateFinding}>
+          <h3>Edit Audit Finding</h3>
+
+          <div className="form-group">
+            <label htmlFor="edit-issue">Accessibility Issue</label>
+            <input
+              id="edit-issue"
+              type="text"
+              value={editIssue}
+              onChange={(event) => setEditIssue(event.target.value)}
+              required
+            />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="edit-priority">Priority</label>
+            <select
+              id="edit-priority"
+              value={editPriority}
+              onChange={(event) =>
+                setEditPriority(
+                  event.target.value as AuditRecord["priority"]
+                )
+              }
+            >
+              <option value="High">High</option>
+              <option value="Medium">Medium</option>
+              <option value="Low">Low</option>
+            </select>
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="edit-status">Status</label>
+            <select
+              id="edit-status"
+              value={editStatus}
+              onChange={(event) =>
+                setEditStatus(
+                  event.target.value as AuditRecord["status"]
+                )
+              }
+            >
+              <option value="Needs review">Needs review</option>
+              <option value="In progress">In progress</option>
+              <option value="Resolved">Resolved</option>
+            </select>
+          </div>
+
+          <button type="submit">Save Changes</button>
+
+          <button type="button" onClick={cancelEditing}>
+            Cancel
+          </button>
+        </form>
+      )}
+
+      <div>
+        <label htmlFor="audit-search">Search audit findings:</label>
+        <input
+          id="audit-search"
+          type="search"
+          placeholder="Search findings..."
+          value={searchTerm}
+          onChange={(event) => setSearchTerm(event.target.value)}
+        />
+      </div>
 
       <div className="table-container">
         <table>
-          <caption>
-            India.gov.in accessibility audit findings and review status
-          </caption>
+          <caption>Manageable accessibility audit findings</caption>
 
           <thead>
             <tr>
               <th scope="col">ID</th>
-              <th scope="col">Accessibility issue</th>
+              <th scope="col">Issue</th>
               <th scope="col">Priority</th>
               <th scope="col">Status</th>
+              <th scope="col">Actions</th>
             </tr>
           </thead>
 
           <tbody>
-            {auditData.map((item) => (
-              <tr key={item.id}>
-                <td>{item.id}</td>
-                <td>{item.issue}</td>
-                <td>{item.priority}</td>
-                <td>{item.status}</td>
+            {filteredRecords.map((record) => (
+              <tr key={record.id}>
+                <td>{record.id}</td>
+                <td>{record.issue}</td>
+                <td>{record.priority}</td>
+                <td>{record.status}</td>
+                <td>
+                  <button
+                    type="button"
+                    onClick={() => startEditing(record)}
+                    aria-label={`Edit ${record.issue}`}
+                  >
+                    Edit
+                  </button>
+                  <button
+  type="button"
+  onClick={() => handleDeleteFinding(record.id)}
+  aria-label={`Delete ${record.issue}`}
+>
+  Delete
+</button>
+                </td>
               </tr>
             ))}
           </tbody>
         </table>
+
+        {filteredRecords.length === 0 && (
+          <p role="status">No matching audit findings found.</p>
+        )}
       </div>
 
       <h3>Live API Data</h3>
@@ -203,20 +406,7 @@ export default function DataTable() {
       </div>
 
       <div>
-        <label htmlFor="post-search">Search posts by title:</label>
-
-        <input
-          id="post-search"
-          type="search"
-          placeholder="Type to search posts..."
-          value={searchTerm}
-          onChange={(event) => setSearchTerm(event.target.value)}
-        />
-      </div>
-
-      <div className="sorting-control">
         <label htmlFor="sort-posts">Sort posts:</label>
-
         <select
           id="sort-posts"
           value={sortOrder}
@@ -230,55 +420,24 @@ export default function DataTable() {
       </div>
 
       {loading && (
-  <div role="status" aria-label="Loading API data">
-    <p>Loading API data...</p>
+        <div role="status">
+          <p>Loading API data...</p>
+        </div>
+      )}
 
-    <div className="table-container">
-      <table aria-hidden="true">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Title</th>
-            <th>Description</th>
-          </tr>
-        </thead>
-
-        <tbody>
-          {Array.from({ length: 5 }).map((_, index) => (
-            <tr key={index}>
-              <td>
-                <span className="skeleton skeleton-id" />
-              </td>
-              <td>
-                <span className="skeleton skeleton-title" />
-              </td>
-              <td>
-                <span className="skeleton skeleton-description" />
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  </div>
-)}
-
-     {error && (
-  <div className="error-banner" role="alert">
-    <p>{error}</p>
-
-    <button type="button" onClick={loadPosts}>
-      Try Again
-    </button>
-  </div>
-)}
+      {error && (
+        <div className="error-banner" role="alert">
+          <p>{error}</p>
+          <button type="button" onClick={loadPosts}>
+            Try Again
+          </button>
+        </div>
+      )}
 
       {!loading && !error && (
         <div className="table-container">
           <table>
-            <caption>
-              Posts retrieved from JSONPlaceholder API
-            </caption>
+            <caption>Posts retrieved from JSONPlaceholder API</caption>
 
             <thead>
               <tr>
